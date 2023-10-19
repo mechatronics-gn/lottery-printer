@@ -112,7 +112,6 @@ def num_button_click(num_button_index):
             num_button.config(state=tk.NORMAL)
         confirm_button.config(state=tk.DISABLED)
 
-"""
 s = serial.Serial(
     port="COM3",
     bytesize=serial.EIGHTBITS,
@@ -122,7 +121,6 @@ s = serial.Serial(
     rtscts=False,
     dsrdtr=False,
 )
-"""
 
 def create_barcode_data(hour, minute, number1, number2, number3):
     x = [hour, minute, num_button[0], num_button[1], num_button[2]]
