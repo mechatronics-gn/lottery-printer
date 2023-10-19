@@ -1,4 +1,5 @@
 import tkinter as tk
+import tkinter.font as font
 from sam4s.message import Message
 from sam4s.text import TextLanguage, TextModification, TextFont, TextAlign
 from sam4s.barcode import BarcodeType, BarcodeHri, BarcodeFont, Barcode
@@ -7,12 +8,14 @@ from datetime import datetime
 import time
 
 
+
 def initialize():
     global num_button_states
 
     num_button_states = [False] * 9
     for i in num_buttons:
         i.config(state=tk.NORMAL, relief=tk.RAISED)
+    confirm_button.config(state=tk.DISABLED)
 
 def confirm():
     global num_button_states
@@ -66,7 +69,7 @@ def confirm():
     message.add_text_align(TextAlign.CENTER)
     message.add_text_lang(TextLanguage.EN)
     message.add_text_size(1,3)
-    message.add_text("2023/07/13" + " " + time)
+    message.add_text("2023/10/21" + " " + time)
     message.add_feed_line(4)
     message.add_cut(True)
     output = message.generate_message()
@@ -76,14 +79,17 @@ def confirm():
     initialize()
 
 window = tk.Tk()
+btn_font = font.Font(size=60, weight='bold')
 
 initialize_buttons = []
 initialize_button = tk.Button(window, text="초기화", command=initialize)
-initialize_button.grid(row=3, column=0, columnspan=2, sticky="we")
+initialize_button['font'] = btn_font
+initialize_button.place(relx=0, rely=0.8, relwidth=2/3, relheight=0.2)
 
 confirm_buttons = []
 confirm_button = tk.Button(window, text="확인", command=confirm)
-confirm_button.grid(row=3, column=2, columnspan=2, sticky="we")
+confirm_button['font'] = btn_font
+confirm_button.place(relx=2/3, rely=0.8, relwidth=1/3, relheight=0.2)
 confirm_button.config(state=tk.DISABLED)
 
 def num_button_click(num_button_index):
@@ -106,6 +112,7 @@ def num_button_click(num_button_index):
             num_button.config(state=tk.NORMAL)
         confirm_button.config(state=tk.DISABLED)
 
+"""
 s = serial.Serial(
     port="COM3",
     bytesize=serial.EIGHTBITS,
@@ -115,6 +122,7 @@ s = serial.Serial(
     rtscts=False,
     dsrdtr=False,
 )
+"""
 
 def create_barcode_data(hour, minute, number1, number2, number3):
     x = [hour, minute, num_button[0], num_button[1], num_button[2]]
@@ -131,9 +139,13 @@ num_button_states = [False] * 9
 
 num_buttons = []
 for i in range(1, 10):
-    num_button = tk.Button(window, text=str(i), width=5, height=2, command=lambda index=i-1: num_button_click(index))
-    num_button.grid(row=(i-1)//3, column=(i-1)%3)
+    num_button = tk.Button(window, text=str(i), command=lambda index=i-1: num_button_click(index))
+    num_button["font"] = btn_font
+    num_button.place(relx=(i-1)%3/3, rely=(i-1)//3*0.8/3, relwidth=1/3, relheight=0.8/3)
     num_buttons.append(num_button)
-                              
+
+window.columnconfigure(1, weight=1)
+window.rowconfigure(1, weight=1)
+
 window.mainloop()
 
